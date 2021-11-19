@@ -12,28 +12,34 @@ services:
       APP_ENV: "dev"
       APP_DEBUG: "true"
       PHP_IDE_CONFIG: "serverName=docker.dev"
-      MONGODB_URL: "mongodb://mongodb:27017"
     depends_on:
-      - mongodb
+      - postgres
 
   nginx:
     build: ./docker/nginx
     ports:
-      - 8021:80
+      - "9000:80"
     volumes:
       - ${SERVICE_ROOT_PATH}/public:/srv/service/public:ro
     depends_on:
       - php
-
-  mongodb:
-    image: mongo:latest
+  postgres:
+    image: postgres:14-alpine
+    restart: always
     environment:
-      - MONGO_DATA_DIR=/usr/data/db
-      - MONGO_LOG_DIR=/dev/null
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
-      - ./.data/db:/usr/data/db
+      - ./.data:/var/lib/postgresql/data
     ports:
-      - 27017:27017
-    command: mongod --smallfiles --logpath=/dev/null # --quiet
-
+      - "5432:5432"
+  pgadmin:
+    image: dpage/pgadmin4:4.6
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - "5433:80"
+    depends_on:
+    - postgres
 

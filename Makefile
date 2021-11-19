@@ -33,5 +33,5 @@ bash:           ## open a container's bash
 
 
 build-php-app:  ## builds a php app (make build-php-app myServiceName)
-	docker-compose exec $(TARGET_ARGS) /bin/sh -c "./composer.phar install"
-	docker-compose exec $(TARGET_ARGS) /bin/sh -c "make build"
+	docker-compose exec $(TARGET_ARGS) /bin/bash -c "./composer.phar install"
+	docker-compose exec $(TARGET_ARGS) /bin/bash -c "make build"

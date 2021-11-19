@@ -1,12 +1,13 @@
 # build
 
 install-dependencies: ## install php dependencies
-	./composer.phar install --no-suggest --prefer-dist;
-	./composer.phar validate --no-check-publish --strict
+	./composer.phar self-update && \
+	./composer.phar install --no-suggest --prefer-dist && \
+	./composer.phar validate --no-check-publish --strict;
 
 check-style: ## run style checks
-	./vendor/bin/phpcs --config-set ignore_warnings_on_exit 1
-	./vendor/bin/phpcs --colors --standard=PSR2 src tests
+	./vendor/bin/php-cs-fixer fix src;
+	./vendor/bin/php-cs-fixer fix tests;
 
 check-mess: ## Run mess detector
 	./vendor/bin/phpmd src text ./phpmd.xml

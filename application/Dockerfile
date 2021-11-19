@@ -5,12 +5,12 @@ ARG TIMEZONE
 ENV PHP_MEMORY_LIMIT 4000M
 
 # Install required packages
-RUN apk add --no-cache --virtual .build-deps git tzdata bash make autoconf build-base shadow
-
-RUN docker-php-ext-install pdo
-
-RUN pecl install -f mongodb \
-    && docker-php-ext-enable mongodb
+RUN set -ex \
+  && apk --no-cache add \
+    git bash postgresql-dev make autoconf
+RUN apk add --no-cache --virtual .build-deps tzdata build-base shadow
+RUN apk add --no-cache zip libzip-dev
+RUN docker-php-ext-install pdo pdo_pgsql zip
 
 RUN rm -rf /tmp/* /etc/apk/cache/*
 
@@ -22,7 +22,7 @@ RUN printf '[PHP]\ndate.timezone = "%s"\n', ${TIMEZONE} >> ${PHP_INI_DIR}/php.in
 RUN printf '[PHP]\nmemory_limit = "%s"\n', ${PHP_MEMORY_LIMIT} > ${PHP_INI_DIR}/php.ini
 RUN "date"
 
-
+#RUN echo "extension=zip" >> /usr/local/etc/php/conf.d/docker-php-ext-zip.ini
 # Install xdebug
 
 RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
