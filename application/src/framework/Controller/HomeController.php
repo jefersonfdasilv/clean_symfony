@@ -13,8 +13,8 @@ class HomeController extends AbstractController
     public function index(): Response
     {
         return new JsonResponse([
-            'message'=>'Ok, Have you ever seen the rain?',
-            'link' =>'https://shorturl.at/aiBEW',
+            'message' => 'Ok, Have you ever seen the rain?',
+            'link' => 'https://shorturl.at/aiBEW',
         ]);
     }
 }
